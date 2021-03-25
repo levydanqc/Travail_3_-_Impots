@@ -1,0 +1,24 @@
+{
+  "name": "travail_3_-_impots",
+  "version": "1.0.0",
+  "description": "Web développement - Travail 3",
+  "main": " script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/levydanqc/travail_3_-_impots.git"
+  },
+  "author": "Dan Lévy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/levydanqc/travail_3_-_impots/issues"
+  },
+  "homepage": "https://gitlab.com/levydanqc/travail_3_-_impots#readme",
+  "devDependencies": {
+    "eslint": "^7.22.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  }
+}
