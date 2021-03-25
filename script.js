@@ -86,19 +86,25 @@ function CalculerImpotEtTauxMoyen(revenu, tauxImposition) {
   let diff = 0;
 
   const { paliers } = tauxImposition;
-
+  const paliersInverse = paliers.slice().reverse();
   // Itérer à travers le tableau à l'envers
-  paliers.slice().reverse().forEach((palier, index) => {
+  paliersInverse.forEach((palier, index) => {
     // Trouver le 1er palier imposable
-    while (revenu > palier.montant) {
+    if (revenu > palier.montant) {
       /* Si 1ère itération, alors diff = revenu - montant
        * Si dernière itération, soustraire le montant personnel de base
        */
-      const first = impot === 0;
-      const last = index === paliers.length - 1;
-      diff = paliers[index - 1].montant - (palier.montant * !first + revenu * first)
-        - (palier.montantPersonnelBase * last); // montant personnel de base
-
+      const last = index === paliersInverse.length - 1;
+      if (impot === 0) {
+        diff = revenu - palier.montant
+          - (tauxImposition.montantPersonnelBase * last); // montant personnel de base
+      } else {
+        diff = paliersInverse[index - 1].montant - palier.montant
+          - (tauxImposition.montantPersonnelBase * last); // montant personnel de base
+      }
+      if (diff < 0) {
+        return 0;
+      }
       impot += diff * palier.taux;
     }
   });
@@ -111,10 +117,10 @@ function CalculerImpotEtTauxMoyen(revenu, tauxImposition) {
 /* Nom, Impôt fédéral, Taux moyen fédéral, Impôt provincial, Taux moyen provincial */
 jsEntree.forEach((particulier) => {
   const [impotFederal, tauxMoyenFederal] = CalculerImpotEtTauxMoyen(
-    particulier.revenu, jsTaux[0].federal,
+    particulier.revenus, jsTaux[0].federal,
   );
   const [impotProvincial, tauxMoyenProvincial] = CalculerImpotEtTauxMoyen(
-    particulier.revenu, jsTaux[0].provincial,
+    particulier.revenus, jsTaux[0].provincial,
   );
   sortie.push({
     nom: particulier.nom,
