@@ -69,12 +69,52 @@ const taux = `[
   ]`;
 /** @type {Object[]} Tableau des données des particuliers */
 const sortie = [];
-
-// Conversion des données crues en objet JS
+/** @type {Object} Objet JS depuis la chaine JSON */
 const jsEntree = JSON.parse(entree);
+/** @type {Object} Objet JS depuis la chaine JSON */
 const jsTaux = JSON.parse(taux);
 
-jsEntree.forEach((particulier) => {
-  sortie.push({ nom: particulier.nom });
-});
 
+function CalculerImpotEtTauxMoyen(revenu, tauxImposition) {
+  let impot = 0;
+  let diff = 0;
+
+  const { paliers } = tauxImposition;
+
+  // Itérer à travers le tableau à l'envers
+  paliers.slice().reverse().forEach((palier, index) => {
+    // Trouver le 1er palier imposable
+    while (revenu > palier.montant) {
+      /* Si 1ère itération, alors diff = revenu - montant
+       * Si dernière itération, soustraire le montant personnel de base
+       */
+      const first = impot === 0;
+      const last = index === paliers.length - 1;
+      diff = paliers[index - 1].montant - (palier.montant * !first + revenu * first)
+        - (palier.montantPersonnelBase * last); // montant personnel de base
+
+      impot += diff * palier.taux;
+    }
+  });
+
+  const tauxMoyen = (impot / revenu) * 100;
+
+  return [impot.toFixed(2), tauxMoyen.toFixed(2)];
+}
+
+/* Nom, Impôt fédéral, Taux moyen fédéral, Impôt provincial, Taux moyen provincial */
+jsEntree.forEach((particulier) => {
+  const [impotFederal, tauxMoyenFederal] = CalculerImpotEtTauxMoyen(
+    particulier.revenu, jsTaux[0].federal,
+  );
+  const [impotProvincial, tauxMoyenProvincial] = CalculerImpotEtTauxMoyen(
+    particulier.revenu, jsTaux[0].provincial,
+  );
+  sortie.push({
+    nom: particulier.nom,
+    impotFederal,
+    tauxMoyenFederal,
+    impotProvincial,
+    tauxMoyenProvincial,
+  });
+});
