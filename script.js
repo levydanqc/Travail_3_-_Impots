@@ -88,6 +88,7 @@ function CalculerImpotEtTauxMoyen(revenu, tauxImposition) {
   const { paliers } = tauxImposition;
   const paliersInverse = paliers.slice().reverse();
   // Itérer à travers le tableau à l'envers
+
   paliersInverse.forEach((palier, index) => {
     // Trouver le 1er palier imposable
     if (revenu > palier.montant) {
@@ -102,10 +103,9 @@ function CalculerImpotEtTauxMoyen(revenu, tauxImposition) {
         diff = paliersInverse[index - 1].montant - palier.montant
           - (tauxImposition.montantPersonnelBase * last); // montant personnel de base
       }
-      if (diff < 0) {
-        return 0;
+      if (diff > 0) {
+        impot += diff * palier.taux;
       }
-      impot += diff * palier.taux;
     }
   });
 
