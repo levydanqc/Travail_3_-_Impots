@@ -74,7 +74,13 @@ const jsEntree = JSON.parse(entree);
 /** @type {Object} Objet JS depuis la chaine JSON */
 const jsTaux = JSON.parse(taux);
 
-
+/**
+ * Calcul le montant total d'impot ainsi que le taux
+ * moyen d'après le revenu annuel.
+ * @param {number} revenu Montant du revenu total annuel
+ * @param {Object} tauxImposition Liste des taux d'imposition
+ * @return {number[]} Somme d'impôt, Taux moyen d'imposition
+ */
 function CalculerImpotEtTauxMoyen(revenu, tauxImposition) {
   let impot = 0;
   let diff = 0;
