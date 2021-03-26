@@ -8,3 +8,6 @@ Pour cloner le projet:
 
 Pour installer le projet:
 `npm install`
+
+Pour démarrer le projet:
+`npm start`
